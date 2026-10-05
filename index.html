@@ -1,0 +1,679 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Weekly Qualified Leads</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fustat:wght@500;700;800&family=Geist:wght@400;500;600&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout: one dark lab-notebook page. Header, summary strip, weekly chart beside source mix, then a filterable table grouped by week. */
+:root {
+  --bg: #0c1c1f;
+  --surface: #12262a;
+  --surface-2: #183036;
+  --line: #2a444a;
+  --ink: #e8f3f5;
+  --ink-2: #a9bcc0;
+  --ink-3: #7f9498;
+  --mint: #d2ffc8;
+  --mint-ink: #0c1c1f;
+  --mint-soft: rgba(210, 255, 200, 0.12);
+  --focus: #d2ffc8;
+  --src-event: #d2ffc8;
+  --src-organic: #5cc8d7;
+  --src-ad: #f2b84b;
+  --src-outreach: #f27d6b;
+  --src-referral: #b19cf5;
+  --src-video: #ee86bf;
+  --src-other: #9fb0b8; --warn-bg: #f2b84b; --warn-ink: #1a1200;
+  --font-display: 'Fustat', 'Geist', system-ui, sans-serif;
+  --font-body: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Roboto Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #f4f8f8; --surface: #ffffff; --surface-2: #e9f3f5; --line: #c7d6da;
+    --ink: #12262a; --ink-2: #435a5f; --ink-3: #62797d;
+    --mint: #12262a; --mint-ink: #d2ffc8; --mint-soft: rgba(18, 38, 42, 0.07); --focus: #12262a;
+    --src-event: #2f8a3f; --src-organic: #12788a; --src-ad: #b87a00; --src-outreach: #c4452f;
+    --src-referral: #6a4fd0; --src-video: #bf3c8a; --src-other: #5d6f77; --warn-bg: #8a5a00; --warn-ink: #fff6e0;
+    color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg: #f4f8f8; --surface: #ffffff; --surface-2: #e9f3f5; --line: #c7d6da;
+  --ink: #12262a; --ink-2: #435a5f; --ink-3: #62797d;
+  --mint: #12262a; --mint-ink: #d2ffc8; --mint-soft: rgba(18, 38, 42, 0.07); --focus: #12262a;
+  --src-event: #2f8a3f; --src-organic: #12788a; --src-ad: #b87a00; --src-outreach: #c4452f;
+  --src-referral: #6a4fd0; --src-video: #bf3c8a; --src-other: #5d6f77; --warn-bg: #8a5a00; --warn-ink: #fff6e0;
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  --bg: #0c1c1f; --surface: #12262a; --surface-2: #183036; --line: #2a444a;
+  --ink: #e8f3f5; --ink-2: #a9bcc0; --ink-3: #7f9498;
+  --mint: #d2ffc8; --mint-ink: #0c1c1f; --mint-soft: rgba(210, 255, 200, 0.12); --focus: #d2ffc8;
+  --src-event: #d2ffc8; --src-organic: #5cc8d7; --src-ad: #f2b84b; --src-outreach: #f27d6b;
+  --src-referral: #b19cf5; --src-video: #ee86bf; --src-other: #9fb0b8; --warn-bg: #f2b84b; --warn-ink: #1a1200;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 14px; line-height: 1.5; }
+.page { max-width: 1180px; margin: 0 auto; padding-inline: 20px; padding-block: 28px 56px; display: flex; flex-direction: column; gap: 28px; }
+.mono { font-family: var(--font-mono); }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+/* header */
+.top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; }
+.brand { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-2); display: flex; align-items: center; gap: 10px; }
+.brand i { width: 10px; height: 10px; border-radius: 50%; background: var(--mint); display: inline-block; }
+h1 { font-family: var(--font-display); font-weight: 800; font-size: clamp(30px, 5vw, 46px); line-height: 1.05; margin: 8px 0 0; letter-spacing: -0.01em; text-wrap: balance; }
+.sub { color: var(--ink-2); margin: 10px 0 0; max-width: 62ch; }
+.top-actions { display: flex; gap: 10px; align-items: center; }
+.theme-btn { background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; cursor: pointer; color: var(--ink-2); font-size: 12px; }
+.theme-btn:hover { border-color: var(--ink-3); color: var(--ink); }
+
+/* summary strip */
+.strip { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.stat { padding: 18px 20px; display: flex; flex-direction: column; gap: 4px; border-right: 1px solid var(--line); min-width: 0; }
+.stat:last-child { border-right: 0; }
+.stat .num { font-family: var(--font-display); font-weight: 800; font-size: 40px; line-height: 1; font-variant-numeric: tabular-nums; }
+.stat.hero .num { color: var(--mint); }
+.stat .lbl { font-size: 13px; color: var(--ink); font-weight: 500; }
+.stat .def { font-size: 12px; color: var(--ink-3); }
+@media (max-width: 1000px) {
+  .strip { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .stat { border-right: 1px solid var(--line); }
+  .stat:nth-child(3n) { border-right: 0; }
+  .stat:nth-child(-n+3) { border-bottom: 1px solid var(--line); }
+}
+@media (max-width: 560px) {
+  .strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .stat:nth-child(3n) { border-right: 1px solid var(--line); }
+  .stat:nth-child(2n) { border-right: 0; }
+  .stat:nth-child(-n+4) { border-bottom: 1px solid var(--line); }
+}
+
+/* panels */
+.panels { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 20px; }
+@media (max-width: 880px) { .panels { grid-template-columns: minmax(0, 1fr); } }
+.panel { border: 1px solid var(--line); border-radius: 10px; background: var(--surface); padding: 20px; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+.panel h2 { font-family: var(--font-display); font-size: 18px; font-weight: 700; margin: 0; }
+.panel .hint { margin: 0; color: var(--ink-3); font-size: 12px; }
+.chart-wrap { overflow-x: auto; }
+svg text { font-family: var(--font-mono); fill: var(--ink-3); font-size: 11px; }
+svg .axis { stroke: var(--line); stroke-width: 1; }
+svg .grid { stroke: var(--line); stroke-width: 1; stroke-dasharray: 2 4; opacity: 0.7; }
+svg .tot { fill: var(--ink); font-size: 12px; font-weight: 500; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: var(--ink-2); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 10px; height: 10px; border-radius: 2px; display: inline-block; flex: none; }
+.mix { display: flex; flex-direction: column; gap: 10px; }
+.mix-row { display: grid; grid-template-columns: 112px minmax(0, 1fr) 28px; align-items: center; gap: 10px; font-size: 13px; }
+.mix-row .bar { height: 10px; border-radius: 3px; background: var(--surface-2); overflow: hidden; }
+.mix-row .bar b { display: block; height: 100%; border-radius: 3px; }
+.mix-row .n { text-align: right; font-variant-numeric: tabular-nums; font-family: var(--font-mono); }
+.mix-row.zero { color: var(--ink-3); }
+.mix-note { font-size: 12px; color: var(--ink-3); margin: 0; }
+
+/* controls */
+.controls { display: flex; flex-direction: column; gap: 12px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.chips .grp { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); margin-right: 4px; }
+.chip { border: 1px solid var(--line); background: transparent; border-radius: 999px; padding: 5px 12px; cursor: pointer; font-size: 13px; color: var(--ink-2); display: inline-flex; gap: 8px; align-items: center; }
+.chip:hover { border-color: var(--ink-3); color: var(--ink); }
+.chip[aria-pressed="true"] { background: var(--mint); border-color: var(--mint); color: var(--mint-ink); }
+.chip .c { font-family: var(--font-mono); font-size: 11px; opacity: 0.85; }
+.chip .sw { width: 8px; height: 8px; border-radius: 50%; }
+.search { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 9px 12px; width: min(380px, 100%); color: var(--ink); }
+.search::placeholder { color: var(--ink-3); }
+
+/* table */
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+table { width: 100%; border-collapse: collapse; min-width: 1120px; }
+th { text-align: left; font-family: var(--font-mono); font-weight: 500; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); padding: 12px 14px; border-bottom: 1px solid var(--line); background: var(--surface); position: sticky; top: env(safe-area-inset-top, 0px); }
+td { padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr.lead:hover td { background: var(--mint-soft); }
+tr.wk td { background: var(--surface-2); padding-block: 9px; font-family: var(--font-mono); font-size: 12px; color: var(--ink-2); letter-spacing: 0.04em; }
+tr.wk td b { color: var(--ink); font-weight: 500; }
+tr.wk.empty td { color: var(--ink-3); font-style: italic; }
+.who { display: flex; gap: 10px; align-items: flex-start; }
+.tog { flex: none; width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--line); background: transparent; cursor: pointer; line-height: 1; color: var(--ink-2); font-size: 14px; margin-top: 1px; }
+.tog:hover { border-color: var(--mint); color: var(--mint); }
+.who .nm { font-weight: 600; }
+.who .rl { color: var(--ink-3); font-size: 12px; }
+.co { font-weight: 500; }
+.co.na, .nm.na { color: var(--ink-3); font-weight: 400; font-style: italic; }
+.need { color: var(--ink); max-width: 46ch; }
+.date { font-family: var(--font-mono); font-size: 12.5px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.date.ap::after { content: " ~"; color: var(--ink-3); }
+.date.none { color: var(--ink-3); }
+.src { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+.tier { display: inline-flex; gap: 6px; align-items: center; font-size: 12px; white-space: nowrap; border-radius: 999px; padding: 2px 10px; border: 1px solid var(--line); color: var(--ink-2); }
+.tier.q { background: var(--mint); border-color: var(--mint); color: var(--mint-ink); font-weight: 600; }
+.tier.w { border-color: var(--ink-3); color: var(--ink); }
+.tier.p { border-style: dashed; color: var(--ink-3); }
+.tier.u { border-style: dotted; border-color: var(--ink-3); color: var(--ink); background: var(--mint-soft); white-space: normal; }
+.fi { display: flex; flex-direction: column; gap: 2px; font-family: var(--font-mono); font-size: 11.5px; white-space: nowrap; }
+.lv { color: var(--ink-3); }
+.lv-high { color: var(--ink); font-weight: 600; }
+.lv-medium { color: var(--ink-2); }
+.hs { display: inline-block; font-size: 12px; border-radius: 999px; padding: 2px 10px; border: 1px solid var(--line); color: var(--ink-2); white-space: nowrap; }
+.hs-client { background: var(--warn-bg); border-color: var(--warn-bg); color: var(--warn-ink); font-weight: 600; }
+.hs-quote { border-color: var(--warn-bg); color: var(--ink); }
+.hs-nurture, .hs-lead { color: var(--ink); }
+.hs-maybe { border-style: dashed; color: var(--ink); }
+.hs-none, .hs-na { color: var(--ink-3); border-color: transparent; padding-left: 0; }
+.selects { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; }
+.selects label { display: flex; gap: 8px; align-items: center; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
+.sel { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; color: var(--ink); font-size: 13px; letter-spacing: 0; text-transform: none; font-family: var(--font-body); max-width: 100%; }
+.det-grid a { color: var(--ink); text-decoration: underline; text-underline-offset: 2px; margin-left: 6px; white-space: nowrap; }
+.cardtag { font-family: var(--font-mono); font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); border: 1px solid var(--line); border-radius: 4px; padding: 0 5px; margin-left: 6px; vertical-align: 1px; }
+tr.det td { background: var(--bg); padding: 14px 14px 18px 50px; }
+.det-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px 28px; max-width: 920px; }
+.det-grid h4 { margin: 0 0 3px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+.det-grid p { margin: 0; color: var(--ink); overflow-wrap: anywhere; }
+.empty-state { padding: 36px 20px; text-align: center; color: var(--ink-3); }
+
+/* notes */
+.notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+.notes .panel h3 { margin: 0; font-family: var(--font-display); font-size: 15px; }
+.notes ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 7px; color: var(--ink-2); }
+.notes li b { color: var(--ink); font-weight: 600; }
+.foot { color: var(--ink-3); font-size: 12px; }
+@media (prefers-reduced-motion: no-preference) { .chip, .tog, .theme-btn { transition: background 0.15s, border-color 0.15s, color 0.15s; } }
+</style>
+</head>
+<body>
+<main class="page">
+  <header class="top">
+    <div>
+      <div class="brand"><i></i>SaphoBio &nbsp;/&nbsp; Growth</div>
+      <h1>Weekly Qualified Leads</h1>
+      <p class="sub">Every contact from the last two months who stated a testing need or asked for a call, quote or RFP. Sources: HubSpot ticker in Slack, CCH (DC) and PepMed notes in Notion, Peptides for Women, X DMs, scanned business cards and a HubSpot cross-check.</p>
+    </div>
+    <div class="top-actions">
+      <span class="mono" style="font-size:12px;color:var(--ink-3)">Aug 1 to Oct 1, 2026</span>
+      <button class="theme-btn" id="themeBtn" type="button">Light mode</button>
+    </div>
+  </header>
+
+  <section class="strip" aria-label="Summary">
+    <div class="stat hero"><span class="num" id="sQ">0</span><span class="lbl">Qualified</span><span class="def">Stated a test need, or call / RFP / quote under way</span></div>
+    <div class="stat"><span class="num" id="sW">0</span><span class="lbl">Warm</span><span class="def">Met and positive, need not yet confirmed</span></div>
+    <div class="stat"><span class="num" id="sP">0</span><span class="lbl">Partners and intros</span><span class="def">Podcast guests, connectors, peer labs</span></div>
+    <div class="stat"><span class="num" id="sU">0</span><span class="lbl">Card, status unknown</span><span class="def">Business card in hand, no earlier lead record</span></div>
+    <div class="stat"><span class="num" id="sL">0</span><span class="lbl">Qualified in last 14 days</span><span class="def">Since Sep 17, 2026</span></div>
+    <div class="stat"><span class="num" id="sH">0</span><span class="lbl">Already clients in HubSpot</span><span class="def">Listed here as leads; company is an active client</span></div>
+  </section>
+
+  <section class="panels">
+    <div class="panel">
+      <div>
+        <h2>Leads by week</h2>
+        <p class="hint" id="chartHint"></p>
+      </div>
+      <div class="chart-wrap"><svg id="chart" role="img" aria-label="Stacked bars of leads per week, colored by source" viewBox="0 0 640 250" width="100%" height="auto" style="min-width:520px"></svg></div>
+      <div class="legend" id="legend"></div>
+    </div>
+    <div class="panel">
+      <div>
+        <h2>Source mix</h2>
+        <p class="hint" id="mixHint"></p>
+      </div>
+      <div class="mix" id="mix"></div>
+      <p class="mix-note">Sales outreach and Video show zero because nothing from those channels was logged in the sources above during this window.</p>
+    </div>
+  </section>
+
+  <section class="controls" aria-label="Filters">
+    <div class="chips" id="tierChips"><span class="grp">Stage</span></div>
+    <div class="chips" id="srcChips"><span class="grp">Source</span></div>
+    <div class="selects" id="selects"></div>
+    <input class="search" id="q" type="search" placeholder="Search name, company or need" aria-label="Search leads">
+  </section>
+
+  <section>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th style="width:17%">Contact name</th><th style="width:14%">Company</th><th>Need</th><th style="width:96px">Date</th><th style="width:150px">Source</th><th style="width:160px">Stage</th><th style="width:104px">Fit / intent</th><th style="width:120px">HubSpot</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <p class="foot" style="margin-top:10px">A tilde after a date means the date is approximate. Select the plus button on a row for contact details, history and next step.</p>
+  </section>
+
+  <section class="notes">
+    <div class="panel">
+      <h3>Reviewed and left out</h3>
+      <ul>
+        <li><b>Investor and vendor pitches (5):</b> DeltaOne SA (Aug 15), Pembal Holdings (Sep 22), TurboJot (Sep 12), attendee-list seller (Sep 5), freelance writer Hannah Melotto (Aug 28 and Sep 22).</li>
+        <li><b>Invoice-payment message (1):</b> Kleptra, John (Sep 28). The message asks about an unpaid invoice and does not mention testing, although the form ticked potency.</li>
+        <li><b>Internal test (1):</b> Pablo Ryzhov, using Pavel's email (Aug 31).</li>
+        <li><b>Looks fake (1):</b> "James Bond" with a Gmail address from the Sep 10 ad click. Business type Other, sterility interest, no message. Restore it if you recognise it.</li>
+        <li><b>Conference intel, no buying need (2):</b> Scott Brunner (CCH speaker) and Rachael Pontiques (Mochi), who confirmed FDA reluctance on alternative sterility methods.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3>Data notes</h3>
+      <ul>
+        <li><b>Undated X leads:</b> Regenerative Research and Peptide Critic have no date in the X DM slide. Dates marked with a tilde for the other X leads come from the day their first Lab/Sales ticket was logged.</li>
+        <li><b>Names not recorded:</b> READY, Rebody Health, Thaeta Scientific, Curexa and the Bordeaux's pharmacy contacts have no full contact name in the notes.</li>
+        <li><b>Source calls:</b> Inbound forms with a Google, Bing or DuckDuckGo referrer are Website organic. Metro Meds had no referrer, so it is also Website organic. The Sep 9 Dunivant lead is Website ad because Pavel confirmed it in the Slack thread.</li>
+        <li><b>Existing accounts:</b> The Lab/Sales ticket DB also lists Striker, Art of Medicine, Sweetgrass, C3, Align, Hillsdale, EmeraldsRx, Canada, Hillstone, Creative Compounding, Spring Creek, Cache Valley, Gibsons, The Pharmacy Place. They look like existing clients, so they are not counted as new leads.</li>
+        <li><b>Business cards:</b> All 12 scanned. Eleven matched existing contacts and now carry the card details (title, phone, email, address, website, handwritten notes), marked with a Card tag. Raymond L. Solano III (PDLabs) had no entry of his own, only a mention in Michael Macione's note, so he sits under Card, status unknown.</li>
+        <li><b>HubSpot check (Oct 5):</b> every lead was searched by company name, domain and email. Matches on domain only are noted. Possible matches are flagged where the name fits but the location or domain does not. Three leads here are already active clients in HubSpot (ReviveRx, John's Rx, Pharmatron), and Medivera is at Quote Issued. The counts above still include them. Duplicate HubSpot records exist for Monica Quiros, Lily Niehaus and Wedgewood.</li>
+        <li><b>Fit and intent:</b> these are separate ratings. Fit is how well the account matches our buyer: High is a sterile or multi-site pharmacy or large account, Medium is non-sterile, small, or an adjacent brand, Low is not a buyer (vendors, influencers, investors, consultants), Unknown means the type was not recorded. Intent is High when a need is stated and something is under way (call held, RFP, quote, ticket, active client), Medium when a need is stated with nothing under way, Low when the meeting was positive but no need was stated, and None for partners and intros.</li>
+        <li><b>Logged by:</b> the person whose notes the lead comes from (Pavel's or Abraham's conference notes, Pavel's X and event slides). Web form leads come from the HubSpot ticker. The HubSpot owner is shown separately in each row.</li>
+        <li><b>Quiet period:</b> No qualified leads were logged for the weeks of Sep 21 and Sep 28.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<script>
+(function () {
+  var SRC = {
+    event:    { label: 'Event',           cls: '--src-event' },
+    organic:  { label: 'Website organic', cls: '--src-organic' },
+    ad:       { label: 'Website ad',      cls: '--src-ad' },
+    outreach: { label: 'Sales outreach',  cls: '--src-outreach' },
+    referral: { label: 'Referral',        cls: '--src-referral' },
+    video:    { label: 'Video',           cls: '--src-video' },
+    other:    { label: 'Other (X, ads, newsletter)', short: 'Other', cls: '--src-other' }
+  };
+  var TIER = { q: 'Qualified', w: 'Warm', p: 'Partner / intro', u: 'Card, status unknown' };
+
+  // d = date (null when not recorded), ap = approximate date
+  var L = [
+    // ---------- HubSpot inbound (Slack #sales-activity-ticker) ----------
+    { n: 'Jeff Mathew Kavumkal', r: '503A sterile', c: 'Metro Meds Rx', need: 'Stability studies (USP <797>) for tirzepatide/glycine and semaglutide/glycine', d: '2026-08-03', s: 'organic', t: 'q',
+      ct: 'jeff@metromedsrx.com, 813-787-1070', ev: 'HubSpot form /contact, no referrer or UTM',
+      note: 'Company inferred from the email domain. Likely the same account as "Metro Medicine" in the Lab/Sales ticket DB, where a QC questionnaire was completed Aug 24.', next: 'Confirm the Metro Medicine match and quote the stability study.' },
+    { n: 'Aaron Schneider', r: '503A sterile and non-sterile, wholesaler', c: 'AMS Health Rx', need: 'Sterility testing for compounded injectables', d: '2026-08-09', s: 'organic', t: 'q',
+      ct: 'amshealthrx@gmail.com, 979-479-3654', ev: 'HubSpot form /contact, referrer DuckDuckGo',
+      note: 'No message left on the form. Business type ticked: 503A sterile, 503A non-sterile, wholesaler.', next: 'Reach out to learn volume and compounds.' },
+    { n: 'Andres Hernandez', r: '503A sterile', c: 'ReviveRx', need: 'Potency, endotoxin and sterility partner, plus full stability studies', d: '2026-08-10', s: 'organic', t: 'q',
+      ct: 'andres@reviverx.com, 832-525-8133', ev: 'HubSpot form /contact, referrer Bing',
+      note: 'Aug 26: ReviveRx wants several stability studies and asked for a mock completed study for their quality team. The ticket calls them a very large client. Sep 17: met their booth at PepMed, who said Andres was on PTO, and left a card and trifold. They want a stability study.', next: 'Finish the mock stability study document (ticket status: Requested, High).' },
+    { n: 'Alex Beams', r: 'Startup 503A lab', c: 'Not given', need: 'USP <71> sterility and LAL endotoxin sample volumes for batches under 25 units; asked about pay-as-you-go', d: '2026-08-17', s: 'organic', t: 'q',
+      ct: 'alexbeams6@gmail.com', ev: 'HubSpot form /contact, referrer Google',
+      note: 'Compounds Category 3 sterile preparations from non-sterile APIs.', next: 'Send sample requirements and small-batch pricing.' },
+    { n: 'Salahiddeen Ibreighith', r: 'Founder', c: 'Powered Up Peptides', need: 'Rapid testing and COAs for NAD+ and bacteriostatic water: purity and compound; asked for fastest turnaround and cost', d: '2026-08-18', s: 'organic', t: 'q',
+      ct: 'powereduppeptides@gmail.com, 949-272-6270', ev: 'HubSpot form /contact, referrer Google',
+      note: 'Abraham noted two inbounds in two days, which is unusual.', next: 'Send turnaround and price.' },
+    { n: 'Kara Hoehn', r: 'Owner is abe@johnsrx.com (cc requested)', c: "John's Rx", need: 'Endotoxin, rapid sterility and potency for tirzepatide/glycine, semaglutide/glycine and NAD', d: '2026-08-19', s: 'organic', t: 'q',
+      ct: 'kara@johnsrx.com, 573-517-3076', ev: 'HubSpot form /contact, referrer Google',
+      note: 'Asked for replies to both Kara and the owner. A Sep 24 ticket asks to move formulas from Sweetgrass and "John\'s Pharmacys" to VyvRx, so this account may already be active.', next: 'Confirm account status in the ticket DB.' },
+    { n: 'Monica Quiros', r: 'High-volume 503A, sterile and non-sterile', c: 'Brooksville Rx', need: 'Expanding laboratory resources; specific tests not stated', d: '2026-08-26', s: 'organic', t: 'q',
+      ct: 'admin@brooksvillerx.com, 352-848-3446', ev: 'HubSpot form /contact, referrer Google',
+      note: 'Form interest ticked: Other.', next: 'Discovery call to find the compounds and volume.' },
+    { n: 'Tuan Le', r: '503A sterile', c: 'Pharmatron LLC', need: 'Potency testing for semaglutide and tirzepatide (form interest: sterility)', d: '2026-09-02', s: 'ad', t: 'q',
+      ct: 'tuanle@pharmatronllc.com', ev: 'HubSpot form /contact, adwords / ppc / September Services, landing page /services/rapid-sterility-testing',
+      note: 'First conversion from the Google Ads campaign, on roughly the first $100 spent (Pavel, Sep 2).', next: 'Quote potency for both APIs.' },
+    { n: 'Ryan Donahue', r: 'CGT product company', c: 'OC Bio Services', need: 'Details on rapid 2-day sterility testing for a cell and gene therapy product', d: '2026-09-04', s: 'ad', t: 'q',
+      ct: 'ryan@ocbioservices.com, 732-604-0278', ev: 'HubSpot form /services/rapid-sterility-testing, adwords / ppc / September Services',
+      note: 'First lead outside compounding pharmacy. Pavel aligned with Abraham and is booking a discovery call.', next: 'Pavel: discovery call.' },
+    { n: 'Christina Dunivant', r: '503A sterile', c: 'Not given', need: 'Endotoxin, sterility and stability', d: '2026-09-09', s: 'ad', t: 'q',
+      ct: 'dunivantrenee42@gmail.com, 443-309-2990', ev: 'HubSpot form /contact, source field empty',
+      note: 'Pavel confirmed in the thread that this visitor came from the ad and moved from the rapid sterility page to /contact.', next: 'Follow up by email and phone.' },
+
+    // ---------- Peptides for Women (SF, Aug 4) ----------
+    { n: 'Name not recorded', na: true, r: 'Peptides for Women', c: 'READY', need: 'RFP sent after a call', d: '2026-08-04', s: 'event', t: 'q',
+      ct: '', ev: 'Peptides for Women slide: warm contact, call held',
+      note: 'Listed first on the event slide with "sent RFP".', next: 'Wait on RFP response.' },
+    { n: 'Name not recorded', na: true, r: 'Peptides for Women', c: 'Ovul.AI', need: 'LC-MS purity testing', d: '2026-08-04', s: 'event', t: 'q',
+      ct: '', ev: 'Peptides for Women slide: warm contact, call held. Lab/Sales ticket "LC-MS (Purity)", Aug 10',
+      note: 'Ticket notes competitor pricing: $205 per test (Janoshik), $265 (Freedom, includes HPLC purity, mass spec identity, net peptide content and fentanyl screen).', next: 'Check in 3 to 4 weeks after the call.' },
+    { n: 'Name not recorded', na: true, r: 'Peptides for Women', c: 'Rebody Health', need: 'Not recorded', d: '2026-08-04', s: 'event', t: 'w',
+      ct: '', ev: 'Peptides for Women slide: warm contact',
+      note: '', next: 'Second follow-up by email.' },
+    { n: 'Name not recorded', na: true, r: 'Introduced by Jeff Tang', c: 'Thaeta Scientific', need: 'Not recorded; call scheduling in progress', d: '2026-08-04', s: 'referral', t: 'w',
+      ct: '', ev: 'Peptides for Women slide: warm contact via Jeff, call being scheduled',
+      note: 'A Thaeta injectables PDF is attached to the Striker lyo-powder ticket.', next: 'Lock in the call.' },
+    { n: 'Lily Niehaus', r: 'Speaker', c: 'Peptides for Women', need: 'Podcast guest booked', d: '2026-08-04', s: 'event', t: 'p',
+      ct: '', ev: 'Peptides for Women slide: podcast guests booked', note: '', next: 'Record the episode.' },
+    { n: 'Jeff Tang', r: 'Organizer', c: 'Peptides for Women', need: 'Podcast guest booked; made the Thaeta introduction', d: '2026-08-04', s: 'event', t: 'p',
+      ct: '', ev: 'Peptides for Women slide: podcast guests booked', note: 'Sapho sponsored the Peptide Testing 101 talk; the recap went out on X on Aug 5.', next: 'Record the episode.' },
+
+    // ---------- X DMs ----------
+    { n: 'Name not recorded', na: true, r: 'X DM', c: 'Regenerative Research', need: 'Two calls held. Possible first client from X', d: null, s: 'other', t: 'q',
+      ct: '', ev: 'X DM slide: warm contact, call held, listed under Clients as 0 to 1?',
+      note: 'The X slide counts 0 clients today with a possible first one here.', next: 'Close the first client.' },
+    { n: 'Name not recorded', na: true, r: 'X DM', c: 'Peptime', need: 'Consolidated COA per batch', d: '2026-08-13', ap: true, s: 'other', t: 'q',
+      ct: '', ev: 'X DM slide: warm contact, call held. Ticket "Consolidated CoA per batch", Aug 13 (also EmeraldsRx), priority Low',
+      note: 'Date is when the ticket was logged.', next: 'Decide on a consolidated COA format.' },
+    { n: 'Name not recorded', na: true, r: 'X DM', c: 'LifeIgnite Research', need: 'LC-MS purity, fentanyl screening and heavy metals (ICP-MS)', d: '2026-08-10', ap: true, s: 'other', t: 'q',
+      ct: '', ev: 'X DM slide: warm contact. Three tickets on Aug 10, all Requested',
+      note: 'Competitor prices on the tickets: fentanyl $50 to $75 per test, heavy metals $105 to $150 per test, LC-MS $205 to $265 per test.', next: 'Scope and price the three assays.' },
+    { n: 'Name not recorded', na: true, r: 'X DM', c: 'Virtus Peptides', need: 'ISO 17025 accreditation', d: '2026-08-10', ap: true, s: 'other', t: 'q',
+      ct: '', ev: 'X DM slide: warm contact. Ticket "ISO 17025", Aug 10, Requested',
+      note: 'The same ISO 17025 request is logged for six other accounts in the ticket DB.', next: 'Share the 17025 timeline.' },
+    { n: 'Name not recorded', na: true, r: 'X DM', c: 'Peptide Critic', need: 'Not recorded', d: null, s: 'other', t: 'w',
+      ct: '', ev: 'X DM slide: warm contact', note: '', next: 'Start a conversation about their testing needs.' },
+
+    // ---------- CCH Conference, Washington DC (Sep 15) ----------
+    { n: 'Peter Koshland', r: 'Pharm.D; APC 2027 Executive Committee', c: 'Koshland Pharm (San Francisco)', need: 'Rapid sterility method, given recent California rule changes; wants to visit onsite', d: '2026-09-15', s: 'event', t: 'q', bc: true,
+      ct: 'peter@koshlandpharm.com, office 415-344-0600, cell 510-318-2852, fax 415-344-0607', addr: '301 Folsom St., Suite B, San Francisco, CA 94105', web: 'koshlandpharm.com',
+      ev: 'CCH notes (Pavel), business card',
+      card: 'Koshland Pharm Custom Compounding Pharmacy, "Personal medicine. Uncompromising standards." Carries the PCAB accredited compounding pharmacy mark. Back of the card is a logo only.',
+      note: 'Pavel to double check the California regulation. Got a trifold and business card.', next: 'Offer an onsite visit.' },
+    { n: 'Name not recorded', na: true, r: 'Met by Abraham', c: 'Curexa', need: 'Non-sterile testing; "very interested"', d: '2026-09-15', s: 'event', t: 'q',
+      ct: '', ev: 'CCH notes (Abraham)', note: 'Non-sterile only.', next: 'Follow up on LinkedIn or email.' },
+    { n: 'Nancy and Greg Robinson', r: 'Revelation Pharma', c: 'Revelation Pharma', need: 'Network of about 19 503A pharmacies; no stated need yet', d: '2026-09-15', s: 'event', t: 'w',
+      ct: '', ev: 'CCH notes (Abraham and Pavel)', note: 'Pavel spoke with both and gave each a trifold and card. Nancy\'s surname is not recorded.', next: 'Pitch a network-wide program.' },
+    { n: 'Abram Gordon', r: 'Owner', c: 'STAQ Pharma (Denver)', need: 'Runs a 503B and a 503A; short conversation', d: '2026-09-15', s: 'event', t: 'w',
+      ct: '', ev: 'CCH notes (Pavel)', note: 'Pavel: worth tracking down and following up.', next: 'Track down and follow up.' },
+    { n: 'Tanner Weir and Maeghan', r: 'Both attended PepMed', c: "Bordeaux's New Drug Store (Louisiana)", need: 'Not recorded', d: '2026-09-15', s: 'event', t: 'w',
+      ct: '', ev: 'CCH notes (Pavel)', note: 'Emails still need to be found.', next: 'Find emails and follow up.' },
+    { n: 'Glen Anakwe', r: 'Co-runs with his wife Cindy', c: 'Agerite Pharmacy & Wellness Center (Cypress, TX)', need: 'Works with Eagle; no stated need yet', d: '2026-09-15', s: 'event', t: 'w',
+      ct: '', ev: 'CCH notes (Pavel)', note: 'May have heard from Sapho before. Got a trifold and card.', next: 'Follow up.' },
+    { n: 'Kristen Youngdahl', r: 'Chief Operating Officer, PharmD; APC board member', c: 'Belmar Pharma Solutions (Golden, CO)', need: "Women's health hormones pharmacy; no stated need yet", d: '2026-09-15', s: 'event', t: 'w', bc: true,
+      ct: 'Kristen.Youngdahl@BelmarPharma.com, direct 315-525-6242', addr: '231 Violet Street, Suite 140, Golden, CO 80401', web: 'belmarpharmasolutions.com',
+      ev: 'CCH notes (Belmar, board member) and PepMed Sep 17, business card',
+      card: 'Belmar Pharma Solutions: Medication, Education, Consultation. Back of the card is the logo and website.',
+      hand: "W. Health / Hormones / Progest./Estr./Test. (likely progesterone, estrogen and testosterone). On the Board of APC.",
+      note: 'Assumed to be the same person across both conferences.', next: 'Follow up.' },
+    { n: 'Name not recorded', na: true, r: 'Met in an elevator', c: 'Medivera', need: 'Half telemedicine, half provider offices they win over with lunches', d: '2026-09-15', s: 'event', t: 'w',
+      ct: '', ev: 'CCH notes (Abraham). Medivera Rx also appears in the ASE Sales Call DB', note: 'Flier handed out.', next: 'Follow up.' },
+    { n: 'Name not recorded', na: true, r: 'Running for Congress', c: 'Olive Tree', need: 'Not recorded', d: '2026-09-15', s: 'event', t: 'w',
+      ct: '', ev: 'CCH notes (Abraham). Olive Tree also appears in the ASE Sales Call DB', note: 'Flier handed out.', next: 'Follow up.' },
+    { n: 'Name not recorded', na: true, r: 'Met by Abraham', c: 'Precision Medicine', need: 'Not recorded', d: '2026-09-15', s: 'event', t: 'w',
+      ct: '', ev: 'CCH notes (Abraham)', note: 'Flier handed out.', next: 'Follow up.' },
+    { n: 'Name not recorded', na: true, r: 'Veterinary', c: 'Wedgewood', need: 'Not recorded', d: '2026-09-15', s: 'event', t: 'w',
+      ct: '', ev: 'CCH notes (Abraham)', note: 'Flier handed out.', next: 'Follow up.' },
+    { n: 'Name not recorded', na: true, r: 'Private equity', c: 'Compounding pharmacy roll-up fund ($30M raised)', need: 'Open to partnering on testing. Sees the market at $5 to 6B excluding GLP-1s', d: '2026-09-15', s: 'event', t: 'p',
+      ct: '', ev: 'CCH notes (Abraham)', note: 'Expects testing to re-rate in 2 to 3 years and buys pharmacies at single-digit EBITDA multiples.', next: 'Keep warm; could open many pharmacies at once.' },
+    { n: 'Sabina Hemmi', r: 'CEO and Co-founder; influencer, about 40k TikTok followers', c: 'GLP Winner', need: 'Interested in the podcast and a patient-facing testing partnership', d: '2026-09-15', s: 'event', t: 'p', bc: true,
+      ct: 'sabina@glpwinner.com; social handle @lawliepop', web: 'glpwinner.com (from her email domain)',
+      ev: 'CCH notes (Pavel), business card',
+      card: 'GLP Winner: "Connecting patients, providers, medication." Front lists TikTok, LinkedIn, Instagram, YouTube and X icons with the handle @lawliepop, plus a QR code. No phone or street address.',
+      note: 'Spoke at CCH on patient views of GLP-1 compounding. Runs a price-comparison site for GLP telehealths.', next: 'Invite to the podcast.' },
+    { n: 'Manan', r: 'Founder', c: 'BioLink', need: 'Peer cGMP testing lab (about $2.5M revenue); offered a joint bid on CIAL for about $6M', d: '2026-09-15', s: 'event', t: 'p',
+      ct: '', ev: 'CCH notes (Abraham)', note: 'Shared that pharma makers run stability studies on every batch with stability chambers.', next: 'Decide on the CIAL offer.' },
+    { n: 'Sam Rubio', r: 'Senior Account Executive', c: 'Dotti (powered by Atrium 24)', need: 'Connects regular pharmacies with compounding pharmacies; CRM management', d: '2026-09-15', s: 'event', t: 'p', bc: true,
+      ct: 'sam@atrium24.io, 727-625-4286 ext. 106', addr: '34650 US Hwy 19 N, Suite 209, Palm Harbor, FL 34684', web: 'atrium24.io',
+      ev: 'CCH notes (Pavel), business card',
+      card: 'Dotti, powered by Atrium 24: "Connecting the dots for your pharmacy\'s sales & marketing initiatives."',
+      hand: 'Sales',
+      note: '', next: 'Explore an intro channel.' },
+    { n: 'Kevin Rockwell', r: 'Account Manager', c: 'Tickerworks, Inc. (Folsom, CA)', need: 'Troches maker with a sister pharmacy, likely non-sterile; worth asking for an intro', d: '2026-09-15', s: 'event', t: 'p', bc: true,
+      ct: 'Care@tickerworks.com (general address), phone 916-850-0136, fax 916-850-0244', web: 'tickerworks.com',
+      ev: 'CCH notes (Pavel), business card',
+      card: 'Tickerworks Compounding Technologies. Back of the card lists TICKER (the syringe that clicks), Troche Pops unit dose packaging, Gentle Dose vaginal applicator and compounding molds.',
+      hand: '"They have a sister pharmacy (non-sterile) troches" and "$5k for 2 conferences (CCH + Owners)".',
+      note: 'The $5k note is not explained anywhere else, so it is unclear whether it is a sponsorship price quoted to Sapho or something else.', next: 'Ask for the sister pharmacy intro.' },
+
+    // ---------- PepMed 2026 (Sep 17 and 18) ----------
+    { n: 'Jake Adams', r: 'Chief Innovation Officer and Co-Founder', c: 'Lumina Longevity', need: 'Looking for testing partners; wants a call with Abe', d: '2026-09-17', s: 'event', t: 'q', bc: true,
+      ct: 'jakeadams@luminalongevitypartners.com, 281-889-8853', web: 'luminalongevity.com',
+      ev: 'PepMed notes, Sep 17, business card',
+      card: 'Lumina Longevity. Title, phone and email match the PepMed notes. The email domain (luminalongevitypartners.com) differs from the website (luminalongevity.com). Back of the card is a logo only.',
+      note: 'Abraham: will add him on LinkedIn.', next: 'Book the call with Abe.' },
+    { n: 'Alaa Salem', r: '', c: 'Not recorded', need: 'Wants a deal with uniform pricing; already spoke with Sean', d: '2026-09-17', s: 'event', t: 'q',
+      ct: '', ev: 'PepMed notes, Sep 17', note: '', next: 'Find the company and align with Sean on pricing.' },
+    { n: 'Christian Lavalle', r: '', c: 'Metabolic Elite', need: 'Characterize an oral yeast protein extract by pepsin digest and peptide detection', d: '2026-09-18', s: 'event', t: 'q',
+      ct: '', ev: 'PepMed notes, Sep 18', note: 'Seven years of R&D on liposome tablets (BPC-157, two-year shelf life), with supplement and compounding arms. Pavel\'s protein background caught his attention. Pavel tagged Abraham: "pretty cool as well".', next: 'Follow-up call.' },
+    { n: 'Shaun Noorian', r: 'CEO (speaker)', c: 'Empower', need: 'Asked if Sapho serves 503A and 503B (503A only, 17025 in process); asked method-validation pricing', d: '2026-09-18', s: 'event', t: 'q',
+      ct: '', ev: 'PepMed notes, Sep 18', note: 'Pavel quoted a few thousand dollars for MST and a few hundred for lot release. Info goes to their Director of Quality.', next: 'Follow up with their Director of Quality.' },
+    { n: 'Fahad Ali', r: '', c: 'Not recorded (New York)', need: 'Potency pricing; stability studies currently with ARL', d: '2026-09-18', s: 'event', t: 'q',
+      ct: 'Phone number taken', ev: 'PepMed notes, Sep 18', note: 'Paid about $27k for a 6-month stability study at ARL and is open to switching if pricing is lower.', next: 'Call to get the pharmacy name and set up a call.' },
+    { n: 'Jesse Morse, MD', r: 'Vocal Miami physician', c: 'Peptavo', need: 'Wants Khavinson peptides (Thymalin); also LL-37, BPC-157, thymosin alpha 1 and 4', d: '2026-09-17', s: 'event', t: 'w',
+      ct: '', ev: 'PepMed notes, Sep 17', note: 'Sapho follows him on X. Runs a course for physicians on peptide prescribing.', next: 'Follow up; cross-promote.' },
+    { n: 'Angela Arbolida and Gretchen', r: 'Angela: Key Account Specialist, South East', c: 'Peptual (powered by Vesalius Longevity Labs)', need: 'Heard the testing pitch; has several pharmacies', d: '2026-09-17', s: 'event', t: 'w', bc: true,
+      ct: 'Angela: aarbolida@vesaliuslabs.com, 602-909-7882', web: 'vesaliuslabs.com',
+      ev: 'PepMed notes, Sep 17, business card (Angela)',
+      card: 'Peptual, powered by Vesalius Longevity Labs. Front says "Scan to become a provider" with a QR code and "Dezawa Aesthetics, licensed distributor". Only Angela\'s card is in hand; none for Gretchen.',
+      note: 'They will pass the card and trifold to their warehouse manager. Sapho has their compound catalog.', next: 'Follow up with the warehouse manager.' },
+    { n: 'Fabian', r: 'Corporate Development', c: 'Empower', need: 'Not recorded', d: '2026-09-17', s: 'event', t: 'w',
+      ct: '', ev: 'PepMed notes, Sep 17', note: 'Said he will pass the card and trifold along.', next: 'Tie into the Empower conversation.' },
+    { n: 'Andrew Reamer', r: 'Medical Affairs', c: 'Empower', need: 'Not recorded', d: '2026-09-17', s: 'event', t: 'w',
+      ct: '', ev: 'PepMed notes, Sep 17', note: 'Advises clinicians on dosing regimens.', next: 'Tie into the Empower conversation.' },
+    { n: 'Michael Macione', r: 'Vice President of Sales & Marketing', c: 'PDLabs (Prescription Dispensing Laboratories)', need: 'Many non-GLP-1 medications to test, including erectile dysfunction products', d: '2026-09-17', s: 'event', t: 'w', bc: true,
+      ct: 'mmacione@pdlabs.net, 508-686-6969', web: 'pdlabsrx.com',
+      ev: 'PepMed notes, Sep 17, business card',
+      card: 'PDLabs, "Patient Driven Healthcare". Back of the card: "Optimize Your Health & Wellbeing". Compounding pharmacy (restorative health programs, professional supplements, telemedicine, allergy and lab testing) and a Performance Health Clinic (exclusive patented formulations, nationally licensed, specialist in LDN, Lyme and mold therapies). QR code.',
+      note: 'Established non-sterile pharmacy. Will pass the intro to President Raymond, whose card Pavel also has. Raymond L. Solano III is now listed under Card, status unknown.', next: 'Follow up with Raymond.' },
+
+    { n: 'Raymond L. Solano III', r: 'President; RPh, MBA, CCN', c: 'PDLabs (Prescription Dispensing Laboratories)', need: 'No need recorded. Named in Michael Macione\'s note as the person who would get the intro', d: '2026-09-17', ap: true, s: 'event', t: 'u', bc: true,
+      ct: 'rsolano@pdlabs.net, office 512-219-0724, cell 512-426-9165, fax 512-219-0943', addr: '1513 E New Hope Dr., Bldg E, Cedar Park, TX 78641', web: 'pdlabsrx.com',
+      ev: 'Business card only. Mentioned in the Sep 17 PepMed note on Michael Macione; the date is taken from that note',
+      card: 'PDLabs: "Patient Driven Healthcare Solutions", "Research centered pharmacy", "Nationally licensed, exclusive patented formulations".',
+      hand: '"Jake Adams call w/ Abe looking for test partners". This is the same need as the Jake Adams (Lumina) lead, so the note may have been written on the wrong card or may link the two.',
+      note: 'No earlier record of Raymond as his own contact. PDLabs is the same company as Michael Macione (VP of Sales), who said he would pass the intro along.', next: 'Confirm what the Jake Adams note means, then follow up and decide his stage.' },
+    { n: 'Brandon Bradford', r: 'Managing Partner', c: 'Low Tide Pharmacy (Oxford, GA)', need: 'Method development, mostly peptide synthesis; opening a pharmacy in Los Angeles', d: '2026-09-17', s: 'event', t: 'w', bc: true,
+      ct: 'brandon@lowtidepharmacy.com, 229-300-3433', addr: '91135 E Metro Parkway, Oxford, GA 30054 (street number as printed; check it)', web: 'lowtidepharmacy.com',
+      ev: 'PepMed notes, Sep 17, business card',
+      card: 'Low Tide Compounding Pharmacy. Back of the card is the logo.',
+      hand: '"does M.D." (likely method development), "next location in LAX", "7 locations but moving to peptide synth".',
+      note: 'Seven pharmacy locations today, shifting toward peptide synthesis.', next: 'Follow up once the Los Angeles pharmacy opens.' },
+    { n: 'Haroon Ahmad', r: 'MD; Regulatory Surveillance & Pharmacovigilance', c: 'Metabolic Supply Group', need: 'Exchanged cards; exact needs to be confirmed', d: '2026-09-17', s: 'event', t: 'w', bc: true,
+      ct: 'haroon@metabolicsupplygroup.com, 845-321-3062', web: 'metabolicsupplygroup.com (from his email domain)',
+      ev: 'PepMed notes, Sep 17, business card',
+      card: 'Metabolic Supply Group (MSG). Back of the card is the MSG logo only.',
+      note: 'His title is regulatory and drug safety, so he may be a gatekeeper or advisor rather than the person who buys testing.', next: 'Follow up on exact needs.' },
+    { n: 'Brett Hawke', r: 'Head Swim Coach', c: 'Enhanced Games', need: 'Brief talk on testing; possible podcast guest later', d: '2026-09-17', s: 'event', t: 'p',
+      ct: '', ev: 'PepMed notes, Sep 17', note: 'Connected on LinkedIn.', next: 'Podcast invite down the line.' },
+    { n: 'Alex Tatem, MD', r: 'Influencer and physician', c: 'Independent', need: 'Advised focusing on peptides rather than testosterone testing; site should also speak to physicians and patients', d: '2026-09-17', s: 'event', t: 'p',
+      ct: '', ev: 'PepMed notes, Sep 17', note: 'Prescribes testosterone and made a rebuttal video to Dr. Mike\'s PCAC coverage. Got a card.', next: 'Use the website feedback.' },
+    { n: 'Ben', r: 'Head of Marketing', c: 'Peptavo', need: 'Followed Peptavo via Sapho Bio; cross-engagement', d: '2026-09-17', s: 'event', t: 'p',
+      ct: '', ev: 'PepMed notes, Sep 17', note: '', next: 'Cross-promote on social.' },
+    { n: 'Lily', r: '', c: 'American Sciences', need: 'BPC-157 gummies and creams; no large-scale testing; possible interview', d: '2026-09-17', s: 'event', t: 'p',
+      ct: '', ev: 'PepMed notes, Sep 17', note: '', next: 'Follow on social; possible interview.' },
+    { n: 'Amy Summers', r: 'Consultant, PharmD, BCSCP (Orange County)', c: 'Restore Health Consulting', need: 'Wants to hear back once Sapho has ISO 17025', d: '2026-09-18', s: 'referral', t: 'p', bc: true,
+      ct: 'info@restorehealthconsulting.com (general address)', web: 'restorehealthconsulting.com (from the email domain)',
+      ev: 'PepMed notes, Sep 18, introduced by Jeff, business card',
+      card: 'Two cards: a plain one with her name and credentials, and a black one for Restore Health Consulting with a QR code. BCSCP is the board-certified sterile compounding pharmacist credential.',
+      hand: '"When 17025 ready reach out", "Laguna [second word unclear], Orange County", "Jeff referral".',
+      note: '', next: 'Reach out after ISO 17025.' },
+    { n: 'Hemal Mehta, MD', r: 'Stem cell physician', c: 'TN Spine and Joint', need: 'Testing stem cell plus peptide combinations; strong guest for How It\'s Measured', d: '2026-09-18', s: 'event', t: 'p',
+      ct: '', ev: 'PepMed notes, Sep 18', note: 'Abraham: "super cool".', next: 'Podcast invite.' },
+    { n: 'Lee Rosebush', r: 'Partner and panel moderator', c: 'Baker & Hostetler LLP', need: 'Chairs the Outsourcing Facility Association; involved with AAPM', d: '2026-09-18', s: 'event', t: 'p',
+      ct: '', ev: 'PepMed notes, Sep 18', note: 'Accepted a LinkedIn request.', next: 'Stay connected.' }
+  ];
+
+  // Enrichment layer: account segment, who logged the lead, fit and intent ratings, HubSpot match.
+  var ENR = {"0": {"seg": "Pharmacy", "type": "503A sterile pharmacy", "who": "Web form (HubSpot)", "em": "jeff@metromedsrx.com", "ph": "813-787-1070", "ct": "", "fit": "High", "intent": "High", "hs": "lead", "hso": "Sean Fisher", "hsu": "https://app.hubspot.com/contacts/242985492/record/0-2/338304548540", "hsn": "In HubSpot as Metro Medicine LLC (matched by domain metromedsrx.com)."}, "1": {"seg": "Pharmacy", "type": "503A sterile and non-sterile, wholesaler", "who": "Web form (HubSpot)", "em": "amshealthrx@gmail.com", "ph": "979-479-3654", "ct": "", "fit": "High", "intent": "Medium", "hs": "lead", "hso": "Sean Fisher", "hsu": "https://app.hubspot.com/contacts/242985492/record/0-1/532906325691", "hsn": "Contact exists in HubSpot (company listed as Independent). No company record."}, "2": {"seg": "Pharmacy", "type": "503A sterile", "size": "Very large client (per ticket)", "st": "TX", "who": "Web form (HubSpot)", "em": "andres@reviverx.com", "ph": "832-525-8133", "ct": "", "fit": "High", "intent": "High", "hs": "client", "hso": "Sean Fisher", "hsu": "https://app.hubspot.com/contacts/242985492/record/0-2/339418390205", "hsn": "Company is an active client in HubSpot (Houston, TX). The contact is still at discovery."}, "3": {"seg": "Pharmacy", "type": "Startup 503A lab (Category 3 sterile)", "who": "Web form (HubSpot)", "em": "alexbeams6@gmail.com", "ct": "", "fit": "Medium", "intent": "Medium", "hs": "lead", "hso": "", "hsu": "https://app.hubspot.com/contacts/242985492/record/0-1/536766931667", "hsn": "Contact exists in HubSpot with no owner and no company."}, "4": {"seg": "Peptide / RUO brand", "type": "Peptide brand (founder)", "who": "Web form (HubSpot)", "em": "powereduppeptides@gmail.com", "ph": "949-272-6270", "ct": "", "fit": "Medium", "intent": "Medium", "hs": "lead", "hso": "Sean Fisher", "hsu": "https://app.hubspot.com/contacts/242985492/record/0-2/340887399118", "hsn": "Company exists at discovery. The contact has no owner."}, "5": {"seg": "Pharmacy", "type": "Pharmacy (owner is Abe)", "who": "Web form (HubSpot)", "em": "kara@johnsrx.com", "ph": "573-517-3076", "ct": "", "fit": "High", "intent": "High", "hs": "client", "hso": "Sean Fisher", "hsu": "https://app.hubspot.com/contacts/242985492/record/0-2/341137200839", "hsn": "Company is an active client in HubSpot under the name John's Pharmacy Altenburg (domain johnsrx.com)."}, "6": {"seg": "Pharmacy", "type": "High-volume 503A, sterile and non-sterile", "who": "Web form (HubSpot)", "em": "admin@brooksvillerx.com", "ph": "352-848-3446", "ct": "", "fit": "High", "intent": "Medium", "hs": "lead", "hso": "Sean Fisher", "hsu": "https://app.hubspot.com/contacts/242985492/record/0-2/342074811110", "hsn": "In HubSpot as Brooksville Pharmaceuticals, Inc (matched by domain). A duplicate contact exists: monica@brooksvillerx.com."}, "7": {"seg": "Pharmacy", "type": "503A sterile", "who": "Web form (HubSpot)", "em": "tuanle@pharmatronllc.com", "ct": "", "fit": "High", "intent": "High", "hs": "client", "hso": "Sean Fisher", "hsu": "https://app.hubspot.com/contacts/242985492/record/0-2/343631396589", "hsn": "Company is an active client in HubSpot. The company record was created Sep 2, the day of this lead. The contact is still at discovery."}, "8": {"seg": "Biotech / lab company", "type": "Cell and gene therapy product company", "who": "Web form (HubSpot)", "em": "ryan@ocbioservices.com", "ph": "732-604-0278", "ct": "", "fit": "Medium", "intent": "Low", "hs": "lead", "hso": "Pavel Ryzhov (contact); company has no owner", "hsu": "https://app.hubspot.com/contacts/242985492/record/0-2/344154805956", "hsn": "In HubSpot as OC Bioservices.", "noteAdd": "The Sep 23 Abraham/Pavel 1:1 says the Google Ads CGT lead decided not to pursue the conversation. That is probably this lead; please confirm."}, "9": {"seg": "Pharmacy", "type": "503A sterile", "who": "Web form (HubSpot)", "em": "dunivantrenee42@gmail.com", "ph": "443-309-2990", "ct": "", "fit": "High", "intent": "Medium", "hs": "lead", "hso": "Sean Fisher", "hsu": "https://app.hubspot.com/contacts/242985492/record/0-1/549498637030", "hsn": "Contact exists in HubSpot with no company."}, "10": {"seg": "Not recorded", "type": "Sent an RFP after a call", "who": "Pavel", "fit": "Unknown", "intent": "High", "hs": "none", "hsn": "No company named READY found in HubSpot."}, "11": {"seg": "Not recorded", "type": "Needs LC-MS purity testing", "size": "6 employees (HubSpot)", "who": "Pavel", "fit": "Unknown", "intent": "High", "hs": "lead", "hso": "", "hsu": "https://app.hubspot.com/contacts/242985492/record/0-2/338534663883", "hsn": "In HubSpot as Ovul (ovul.ai) at discovery, no owner."}, "12": {"seg": "Not recorded", "who": "Pavel", "fit": "Unknown", "intent": "Low", "hs": "none"}, "13": {"seg": "Not recorded", "type": "Injectables (per an attached PDF)", "who": "Pavel", "fit": "Unknown", "intent": "Low", "hs": "maybe", "hso": "Sean Fisher", "hsu": "https://app.hubspot.com/contacts/242985492/record/0-2/340590706412", "hsn": "Possible match: HubSpot has \"Thaeta\" (thaeta.com) at discovery. The domain is not confirmed."}, "14": {"seg": "Physician / influencer / media", "type": "Speaker, podcast guest", "who": "Pavel", "em": "lily@foreviva.com", "fit": "Low", "intent": "None", "hs": "lead", "hso": "Victoria Anderson", "hsu": "https://app.hubspot.com/contacts/242985492/record/0-1/532706115275", "hsn": "HubSpot lists her at ForeViva Medical (lily@foreviva.com), owned by Victoria Anderson. A duplicate contact exists: lilyniehaus@gmail.com."}, "15": {"seg": "Advisor / investor / peer", "type": "Event organizer, connector", "who": "Pavel", "em": "jeff@compoundrx.co", "fit": "Low", "intent": "None", "hs": "maybe", "hso": "Pavel Ryzhov", "hsu": "https://app.hubspot.com/contacts/242985492/record/0-1/528844359392", "hsn": "Possible match: HubSpot has a Jeff Tang (jeff@compoundrx.co, company Compound) owned by Pavel. Not confirmed that it is the same person."}, "16": {"seg": "Peptide / RUO brand", "type": "X outreach, two calls held", "st": "CO", "who": "Pavel", "fit": "Medium", "intent": "High", "hs": "lead", "hso": "Pavel Ryzhov", "hsu": "https://app.hubspot.com/contacts/242985492/record/0-2/335310840550", "hsn": "In HubSpot at discovery (Denver, Colorado), owned by Pavel."}, "17": {"seg": "Peptide / RUO brand", "type": "X outreach, call held", "st": "CA", "who": "Pavel", "fit": "Medium", "intent": "High", "hs": "lead", "hso": "Pavel Ryzhov", "hsu": "https://app.hubspot.com/contacts/242985492/record/0-2/335949681355", "hsn": "In HubSpot at discovery (California), owned by Pavel."}, "18": {"seg": "Peptide / RUO brand", "type": "X outreach, three tickets logged", "who": "Pavel", "fit": "Medium", "intent": "High", "hs": "none"}, "19": {"seg": "Peptide / RUO brand", "type": "X outreach, ISO 17025 ticket", "who": "Pavel", "fit": "Medium", "intent": "Medium", "hs": "none"}, "20": {"seg": "Not recorded", "type": "X account", "who": "Pavel", "fit": "Unknown", "intent": "Low", "hs": "none"}, "21": {"seg": "Pharmacy", "type": "Compounding pharmacy, PCAB accredited", "st": "CA", "who": "Pavel", "em": "peter@koshlandpharm.com", "ph": "415-344-0600 (office), 510-318-2852 (cell)", "ct": "Fax 415-344-0607", "fit": "High", "intent": "Medium", "hs": "lead", "hso": "Sean Fisher (contact); company has no owner", "hsu": "https://app.hubspot.com/contacts/242985492/record/0-2/88366621385", "hsn": "Company (Koshland Pharmacy INC) and contact both exist at discovery."}, "22": {"seg": "Pharmacy", "type": "Non-sterile pharmacy", "who": "Abraham", "fit": "Medium", "intent": "Medium", "hs": "none"}, "23": {"seg": "Pharmacy", "type": "Network of about 19 503A pharmacies", "size": "About 19 pharmacies", "st": "GA", "who": "Pavel + Abraham", "fit": "High", "intent": "Low", "hs": "nurture", "hso": "Sean Fisher", "hsu": "https://app.hubspot.com/contacts/242985492/record/0-2/312745471712", "hsn": "Company exists at Nurture (Kennesaw, GA). No contact for Nancy or Greg Robinson."}, "24": {"seg": "Pharmacy", "type": "503A and 503B", "st": "CO", "who": "Pavel", "fit": "High", "intent": "Low", "hs": "none"}, "25": {"seg": "Pharmacy", "type": "Pharmacy", "st": "LA", "who": "Pavel", "em": "tweir@bndsrx.com", "fit": "Medium", "intent": "Low", "hs": "nurture", "hso": "Sean Fisher", "hsu": "https://app.hubspot.com/contacts/242985492/record/0-2/330310190779", "hsn": "In HubSpot as Boudreaux's New Drug Store (Lake Charles, LA) at Nurture. Tanner Weir is a contact there (tweir@bndsrx.com, Lead). Email shown is Tanner's.", "next": "Follow up with Tanner Weir (email found in HubSpot)."}, "26": {"seg": "Pharmacy", "type": "Pharmacy, works with Eagle", "st": "TX", "who": "Pavel", "fit": "Medium", "intent": "Low", "hs": "nurture", "hso": "Sean Fisher", "hsu": "https://app.hubspot.com/contacts/242985492/record/0-2/298791664372", "hsn": "Company exists at Nurture (Cypress, TX). No contact for Glen Anakwe."}, "27": {"seg": "Pharmacy", "type": "Compounding pharmacy (women's health, hormones)", "st": "CO (card); HubSpot says AZ", "who": "Abraham", "em": "Kristen.Youngdahl@BelmarPharma.com", "ph": "315-525-6242 (direct)", "ct": "", "fit": "Medium", "intent": "Low", "hs": "maybe", "hso": "", "hsu": "https://app.hubspot.com/contacts/242985492/record/0-2/330283552488", "hsn": "Possible match: HubSpot has Belmar Pharma Solutions (same website, belmarpharmasolutions.com) at Lead, but located in Youngtown, AZ, while her card says Golden, CO. No contact for Kristen."}, "28": {"seg": "Pharmacy", "type": "Pharmacy: telehealth plus provider offices", "st": "MI", "who": "Abraham", "fit": "High", "intent": "High", "hs": "quote", "hso": "Sean Fisher", "hsu": "https://app.hubspot.com/contacts/242985492/record/0-2/330312973004", "hsn": "HubSpot has Medivera RX (Troy, MI) at Quote Issued, owned by Sean. That points to an existing deal rather than a cold lead, so Warm here may understate it."}, "29": {"seg": "Pharmacy", "type": "Compounding pharmacy", "st": "NM", "who": "Abraham", "fit": "Medium", "intent": "Low", "hs": "nurture", "hso": "Sean Fisher", "hsu": "https://app.hubspot.com/contacts/242985492/record/0-2/271791077105", "hsn": "In HubSpot as Olive Tree Compounding Pharmacy (Rio Rancho, NM) at Nurture."}, "30": {"seg": "Pharmacy", "type": "Pharmacy", "st": "NY", "who": "Abraham", "fit": "Medium", "intent": "Low", "hs": "lead", "hso": "", "hsu": "https://app.hubspot.com/contacts/242985492/record/0-2/298797108947", "hsn": "In HubSpot as Precision Medicine (Bellmore, NY) at Lead, no owner."}, "31": {"seg": "Pharmacy", "type": "Veterinary compounding pharmacy", "st": "NJ", "who": "Abraham", "fit": "High", "intent": "Low", "hs": "lead", "hso": "Sean Fisher", "hsu": "https://app.hubspot.com/contacts/242985492/record/0-2/298797108945", "hsn": "In HubSpot as Wedgewood Pharmacy LLC (Swedesboro, NJ) at Lead. A duplicate record exists (Bakersfield, CA)."}, "32": {"seg": "Advisor / investor / peer", "type": "Private equity (compounding pharmacy roll-up)", "size": "$30M raised", "who": "Abraham", "fit": "Low", "intent": "None", "hs": "na"}, "33": {"seg": "Physician / influencer / media", "type": "Influencer; runs the GLP Winner comparison site", "size": "About 40k TikTok followers", "who": "Pavel", "em": "sabina@glpwinner.com", "ct": "Social handle @lawliepop", "fit": "Low", "intent": "None", "hs": "none"}, "34": {"seg": "Advisor / investor / peer", "type": "Peer cGMP testing lab", "size": "About $2.5M annual revenue", "who": "Abraham", "fit": "Low", "intent": "None", "hs": "none"}, "35": {"seg": "Vendor / platform", "type": "Pharmacy sales and CRM platform", "st": "FL", "who": "Pavel", "em": "sam@atrium24.io", "ph": "727-625-4286 ext. 106", "ct": "", "fit": "Low", "intent": "None", "hs": "none"}, "36": {"seg": "Vendor / platform", "type": "Compounding supplies; sister pharmacy (non-sterile)", "st": "CA", "who": "Pavel", "em": "care@tickerworks.com", "ph": "916-850-0136", "ct": "Fax 916-850-0244", "fit": "Low", "intent": "None", "hs": "none"}, "37": {"seg": "Not recorded", "who": "Pavel + Abraham", "em": "jakeadams@luminalongevitypartners.com", "ph": "281-889-8853", "ct": "", "fit": "Unknown", "intent": "Medium", "hs": "none"}, "38": {"seg": "Not recorded", "who": "Pavel", "fit": "Unknown", "intent": "Medium", "hs": "none"}, "39": {"seg": "Peptide / RUO brand", "type": "Supplement maker with a compounding pharmacy arm", "who": "Pavel", "fit": "Medium", "intent": "Medium", "hs": "none"}, "40": {"seg": "Pharmacy", "type": "Large compounding pharmacy", "st": "TX", "who": "Pavel", "fit": "High", "intent": "High", "hs": "nurture", "hso": "No owner (lead status: Attempted to contact)", "hsu": "https://app.hubspot.com/contacts/242985492/record/0-2/330313038531", "hsn": "In HubSpot as empower pharmacy (Houston, TX) at Nurture, no owner. No contact for Shaun Noorian."}, "41": {"seg": "Pharmacy", "type": "Pharmacy (name not recorded)", "st": "NY", "who": "Pavel", "ph": "Taken at PepMed (number not in the notes)", "fit": "High", "intent": "Medium", "hs": "none"}, "42": {"seg": "Physician / influencer / media", "type": "Physician (Peptavo, peptide courses)", "who": "Pavel", "fit": "Low", "intent": "Low", "hs": "none"}, "43": {"seg": "Pharmacy", "type": "Distributor with several pharmacies", "who": "Pavel", "em": "aarbolida@vesaliuslabs.com", "ph": "602-909-7882", "ct": "", "fit": "High", "intent": "Low", "hs": "none"}, "44": {"seg": "Pharmacy", "type": "Large compounding pharmacy", "st": "TX", "who": "Pavel", "fit": "High", "intent": "Low", "hs": "nurture", "hso": "", "hsu": "https://app.hubspot.com/contacts/242985492/record/0-2/330313038531", "hsn": "Company level only: empower pharmacy is at Nurture in HubSpot. No contact for Fabian."}, "45": {"seg": "Pharmacy", "type": "Large compounding pharmacy", "st": "TX", "who": "Pavel", "fit": "High", "intent": "Low", "hs": "nurture", "hso": "", "hsu": "https://app.hubspot.com/contacts/242985492/record/0-2/330313038531", "hsn": "Company level only: empower pharmacy is at Nurture in HubSpot. No contact for Andrew Reamer."}, "46": {"seg": "Pharmacy", "type": "Non-sterile compounding pharmacy (multi-decade)", "st": "TX", "who": "Pavel", "em": "mmacione@pdlabs.net", "ph": "508-686-6969", "ct": "", "fit": "Medium", "intent": "Low", "hs": "none"}, "47": {"seg": "Pharmacy", "type": "Non-sterile compounding pharmacy (multi-decade)", "st": "TX", "who": "Pavel", "em": "rsolano@pdlabs.net", "ph": "512-219-0724 (office), 512-426-9165 (cell)", "ct": "Fax 512-219-0943", "fit": "Medium", "intent": "Low", "hs": "none"}, "48": {"seg": "Pharmacy", "type": "Compounding pharmacy, moving toward peptide synthesis", "size": "7 locations", "st": "GA", "who": "Pavel", "em": "brandon@lowtidepharmacy.com", "ph": "229-300-3433", "ct": "", "fit": "High", "intent": "Medium", "hs": "none"}, "49": {"seg": "Not recorded", "type": "Regulatory surveillance and pharmacovigilance physician", "who": "Pavel", "em": "haroon@metabolicsupplygroup.com", "ph": "845-321-3062", "ct": "", "fit": "Unknown", "intent": "Low", "hs": "none"}, "50": {"seg": "Physician / influencer / media", "type": "Sports organization (Enhanced Games)", "who": "Pavel", "fit": "Low", "intent": "None", "hs": "none"}, "51": {"seg": "Physician / influencer / media", "type": "Physician and influencer", "who": "Pavel", "fit": "Low", "intent": "None", "hs": "none"}, "52": {"seg": "Physician / influencer / media", "type": "Marketing contact at Peptavo", "who": "Pavel", "fit": "Low", "intent": "None", "hs": "none"}, "53": {"seg": "Peptide / RUO brand", "type": "Supplement brand (BPC-157 gummies and creams)", "who": "Pavel", "fit": "Low", "intent": "None", "hs": "none"}, "54": {"seg": "Advisor / investor / peer", "type": "Consultant (PharmD, BCSCP)", "st": "CA", "who": "Pavel", "em": "info@restorehealthconsulting.com", "ct": "", "fit": "Low", "intent": "None", "hs": "none"}, "55": {"seg": "Physician / influencer / media", "type": "Stem cell physician", "st": "TN", "who": "Pavel + Abraham", "fit": "Low", "intent": "None", "hs": "none"}, "56": {"seg": "Advisor / investor / peer", "type": "Law firm partner; Outsourcing Facility Association chair", "who": "Pavel", "fit": "Low", "intent": "None", "hs": "none"}};
+  Object.keys(ENR).forEach(function (k) {
+    var f = ENR[k], l = L[+k]; if (!l) return;
+    Object.keys(f).forEach(function (key) {
+      if (key === 'noteAdd') { l.note = (l.note ? l.note + ' ' : '') + f[key]; } else { l[key] = f[key]; }
+    });
+  });
+  var SEGS = ['Pharmacy', 'Peptide / RUO brand', 'Biotech / lab company', 'Vendor / platform', 'Physician / influencer / media', 'Advisor / investor / peer', 'Not recorded'];
+  var WHOS = ['Pavel', 'Abraham', 'Pavel + Abraham', 'Web form (HubSpot)'];
+  var HSL = { client: 'Active client', quote: 'Quote issued', nurture: 'Nurture', lead: 'Lead', maybe: 'Possible match', none: 'Not in HubSpot', na: 'Not checked' };
+  var HSORDER = ['client', 'quote', 'nurture', 'lead', 'maybe', 'none', 'na'];
+
+  var state = { tier: 'q', src: 'all', text: '', open: {}, seg: 'all', who: 'all', hs: 'all' };
+  var $ = function (id) { return document.getElementById(id); };
+  var MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  function parse(d) { var p = d.split('-'); return new Date(Date.UTC(+p[0], +p[1] - 1, +p[2])); }
+  function fmt(d) { var x = parse(d); return MON[x.getUTCMonth()] + ' ' + x.getUTCDate(); }
+  function weekStart(d) { var x = parse(d); var dow = (x.getUTCDay() + 6) % 7; x.setUTCDate(x.getUTCDate() - dow); return x.toISOString().slice(0, 10); }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function cv(name) { return 'var(' + name + ')'; }
+  function srcShort(k) { return SRC[k].short || SRC[k].label; }
+  function dot(k) { return '<i class="sw" style="background:' + cv(SRC[k].cls) + '"></i>'; }
+
+  // week list from Aug 3 to Sep 28
+  var weeks = [];
+  (function () { var w = '2026-08-03'; while (w <= '2026-09-28') { weeks.push(w); var x = parse(w); x.setUTCDate(x.getUTCDate() + 7); w = x.toISOString().slice(0, 10); } })();
+
+  function count(t) { return L.filter(function (l) { return l.t === t; }).length; }
+  function byTier(l) { return state.tier === 'all' || l.t === state.tier; }
+
+  function renderStats() {
+    $('sQ').textContent = count('q'); $('sW').textContent = count('w'); $('sP').textContent = count('p'); $('sU').textContent = count('u'); $('sH').textContent = L.filter(function (l) { return l.hs === 'client'; }).length;
+    $('sL').textContent = L.filter(function (l) { return l.t === 'q' && l.d && l.d >= '2026-09-17'; }).length;
+  }
+
+  function renderChips() {
+    var tc = $('tierChips');
+    tc.innerHTML = '<span class="grp">Stage</span>';
+    [['q', 'Qualified'], ['w', 'Warm'], ['p', 'Partner / intro'], ['u', 'Card, status unknown'], ['all', 'All']].forEach(function (a) {
+      var n = a[0] === 'all' ? L.length : count(a[0]);
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.setAttribute('aria-pressed', state.tier === a[0]);
+      b.innerHTML = a[1] + ' <span class="c">' + n + '</span>';
+      b.onclick = function () { state.tier = a[0]; renderAll(); };
+      tc.appendChild(b);
+    });
+    var sc = $('srcChips');
+    sc.innerHTML = '<span class="grp">Source</span>';
+    var all = document.createElement('button'); all.type = 'button'; all.className = 'chip'; all.setAttribute('aria-pressed', state.src === 'all'); all.textContent = 'All sources';
+    all.onclick = function () { state.src = 'all'; renderAll(); }; sc.appendChild(all);
+    Object.keys(SRC).forEach(function (k) {
+      var n = L.filter(function (l) { return l.s === k && byTier(l); }).length;
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.setAttribute('aria-pressed', state.src === k);
+      b.innerHTML = (state.src === k ? '' : dot(k)) + srcShort(k) + ' <span class="c">' + n + '</span>';
+      b.onclick = function () { state.src = k; renderAll(); };
+      sc.appendChild(b);
+    });
+  }
+
+  function renderChart() {
+    var data = L.filter(byTier);
+    var undated = data.filter(function (l) { return !l.d; }).length;
+    $('chartHint').textContent = (state.tier === 'all' ? 'All stages' : (state.tier === 'u' ? 'Business cards with unknown status' : TIER[state.tier] + ' leads')) + ', week starting Monday. ' + (undated ? undated + ' undated lead' + (undated > 1 ? 's' : '') + ' not shown.' : '');
+    var per = {}; weeks.forEach(function (w) { per[w] = {}; });
+    data.forEach(function (l) { if (!l.d) return; var w = weekStart(l.d); if (per[w]) per[w][l.s] = (per[w][l.s] || 0) + 1; });
+    var totals = weeks.map(function (w) { return Object.keys(per[w]).reduce(function (a, k) { return a + per[w][k]; }, 0); });
+    var max = Math.max(4, Math.max.apply(null, totals));
+    var step = max <= 8 ? 2 : (max <= 20 ? 5 : 10); var top = Math.ceil(max / step) * step;
+    var W = 640, H = 250, ml = 34, mr = 10, mt = 18, mb = 34, iw = W - ml - mr, ih = H - mt - mb;
+    var bw = iw / weeks.length, gap = Math.min(14, bw * 0.28);
+    var s = '';
+    for (var v = 0; v <= top; v += step) {
+      var y = mt + ih - (v / top) * ih;
+      s += '<line class="' + (v === 0 ? 'axis' : 'grid') + '" x1="' + ml + '" x2="' + (W - mr) + '" y1="' + y + '" y2="' + y + '"/>';
+      s += '<text x="' + (ml - 8) + '" y="' + (y + 4) + '" text-anchor="end">' + v + '</text>';
+    }
+    weeks.forEach(function (w, i) {
+      var x = ml + i * bw + gap / 2, bwid = bw - gap, acc = 0;
+      Object.keys(SRC).forEach(function (k) {
+        var n = per[w][k] || 0; if (!n) return;
+        var h = (n / top) * ih, y2 = mt + ih - ((acc + n) / top) * ih; acc += n;
+        s += '<rect x="' + x + '" y="' + y2 + '" width="' + bwid + '" height="' + Math.max(h - 1, 1) + '" rx="2" fill="' + cv(SRC[k].cls) + '"><title>' + fmt(w) + ': ' + n + ' ' + srcShort(k) + '</title></rect>';
+      });
+      var t = totals[i];
+      if (t) s += '<text class="tot" x="' + (x + bwid / 2) + '" y="' + (mt + ih - (t / top) * ih - 6) + '" text-anchor="middle">' + t + '</text>';
+      else s += '<text x="' + (x + bwid / 2) + '" y="' + (mt + ih - 6) + '" text-anchor="middle">0</text>';
+      s += '<text x="' + (x + bwid / 2) + '" y="' + (H - 12) + '" text-anchor="middle">' + fmt(w) + '</text>';
+    });
+    $('chart').innerHTML = s;
+    $('legend').innerHTML = Object.keys(SRC).filter(function (k) { return data.some(function (l) { return l.s === k && l.d; }); }).map(function (k) { return '<span>' + dot(k).replace('class="sw"', 'class="sw"') + srcShort(k) + '</span>'; }).join('');
+  }
+
+  function renderMix() {
+    var data = L.filter(byTier); var total = data.length || 1;
+    $('mixHint').textContent = (state.tier === 'all' ? 'All stages' : TIER[state.tier]) + ', ' + data.length + (data.length === 1 ? ' contact' : ' contacts');
+    $('mix').innerHTML = Object.keys(SRC).map(function (k) {
+      var n = data.filter(function (l) { return l.s === k; }).length;
+      return '<div class="mix-row' + (n ? '' : ' zero') + '"><span>' + srcShort(k) + '</span><span class="bar"><b style="width:' + (n / total * 100) + '%;background:' + cv(SRC[k].cls) + '"></b></span><span class="n">' + n + '</span></div>';
+    }).join('');
+  }
+
+  function matches(l) {
+    if (!byTier(l)) return false;
+    if (state.src !== 'all' && l.s !== state.src) return false;
+    if (state.seg !== 'all' && (l.seg || 'Not recorded') !== state.seg) return false;
+    if (state.who !== 'all' && (l.who || 'Not recorded') !== state.who) return false;
+    if (state.hs !== 'all' && (l.hs || 'none') !== state.hs) return false;
+    if (state.text) { var h = (l.n + ' ' + l.c + ' ' + l.need + ' ' + l.r + ' ' + (l.type || '') + ' ' + (l.em || '')).toLowerCase(); if (h.indexOf(state.text) < 0) return false; }
+    return true;
+  }
+
+  function lv(v) { return 'lv lv-' + String(v || '').toLowerCase().replace(/[^a-z]/g, ''); }
+  function fiHtml(l) {
+    if (!l.fit && !l.intent) return '<span class="lv">Not rated</span>';
+    return '<span class="fi"><span class="' + lv(l.fit) + '">Fit ' + esc(l.fit || '-') + '</span><span class="' + lv(l.intent) + '">Intent ' + esc(l.intent || '-') + '</span></span>';
+  }
+  function hsHtml(l) { var k = l.hs || 'none'; return '<span class="hs hs-' + k + '">' + esc(HSL[k]) + '</span>'; }
+
+  function detail(l) {
+    var rows = [];
+    if (l.em) rows.push(['Email', l.em]);
+    if (l.ph) rows.push(['Phone', l.ph]);
+    if (l.ct) rows.push(['Other contact', l.ct]);
+    if (!l.em && !l.ph && !l.ct) rows.push(['Contact', 'Not recorded']);
+    if (l.addr) rows.push(['Address', l.addr]);
+    if (l.web) rows.push(['Website', l.web]);
+    rows.push(['Account', (l.seg || 'Not recorded') + (l.type ? ': ' + l.type : '')]);
+    if (l.size) rows.push(['Scale', l.size]);
+    if (l.st) rows.push(['State', l.st]);
+    rows.push(['Logged by', l.who || 'Not recorded']);
+    var k = l.hs || 'none';
+    rows.push(['HubSpot', HSL[k] + (l.hso ? ' · owner: ' + l.hso : '') + (l.hsn ? '. ' + l.hsn : ''), l.hsu]);
+    rows.push(['Fit and intent', 'Fit ' + (l.fit || 'not rated') + ' · Intent ' + (l.intent || 'not rated')]);
+    rows.push(['Where it came from', l.ev]);
+    if (l.card) rows.push(['From the business card', l.card]);
+    if (l.hand) rows.push(['Handwritten on the card', l.hand]);
+    rows.push(['History', l.note || 'No further notes'], ['Next step', l.next || '']);
+    return '<tr class="det"><td colspan="8"><div class="det-grid">' + rows.map(function (r) {
+      return '<div><h4>' + r[0] + '</h4><p>' + esc(r[1]) + (r[2] ? ' <a href="' + esc(r[2]) + '" target="_blank" rel="noopener">Open record</a>' : '') + '</p></div>';
+    }).join('') + '</div></td></tr>';
+  }
+
+  function buildSelects() {
+    function mk(id, label, opts, key) {
+      var w = document.createElement('label'); w.setAttribute('for', id); w.appendChild(document.createTextNode(label));
+      var sel = document.createElement('select'); sel.id = id; sel.className = 'sel';
+      sel.innerHTML = '<option value="all">All</option>' + opts.map(function (o) { return '<option value="' + esc(o[0]) + '">' + esc(o[1]) + '</option>'; }).join('');
+      sel.onchange = function () { state[key] = sel.value; renderAll(); };
+      w.appendChild(sel); $('selects').appendChild(w);
+    }
+    mk('segSel', 'Segment', SEGS.map(function (v) { return [v, v]; }), 'seg');
+    mk('whoSel', 'Logged by', WHOS.map(function (v) { return [v, v]; }), 'who');
+    mk('hsSel', 'HubSpot', HSORDER.map(function (v) { return [v, HSL[v]]; }), 'hs');
+  }
+
+  function renderRows() {
+    var list = L.map(function (l, i) { l.i = i; return l; }).filter(matches);
+    var groups = {};
+    list.forEach(function (l) { var k = l.d ? weekStart(l.d) : 'none'; (groups[k] = groups[k] || []).push(l); });
+    var order = Object.keys(groups).filter(function (k) { return k !== 'none'; }).sort().reverse();
+    if (groups.none) order.push('none');
+    var html = '';
+    order.forEach(function (k) {
+      var g = groups[k].slice().sort(function (a, b) { return (b.d || '').localeCompare(a.d || '') || (a.t > b.t ? 1 : -1); });
+      var qn = g.filter(function (l) { return l.t === 'q'; }).length;
+      html += '<tr class="wk"><td colspan="8">' + (k === 'none' ? '<b>Date not recorded</b>' : 'Week of <b>' + fmt(k) + '</b>') + ' &nbsp;·&nbsp; ' + g.length + ' lead' + (g.length > 1 ? 's' : '') + (qn && state.tier === 'all' ? ' (' + qn + ' qualified)' : '') + '</td></tr>';
+      g.forEach(function (l) {
+        var open = !!state.open[l.i];
+        html += '<tr class="lead"><td><div class="who"><button class="tog" type="button" data-i="' + l.i + '" aria-expanded="' + open + '" aria-label="Details for ' + esc(l.c) + '">' + (open ? '−' : '+') + '</button><div><div class="nm' + (l.na ? ' na' : '') + '">' + esc(l.n) + (l.bc ? ' <span class="cardtag">Card</span>' : '') + '</div>' + (l.r ? '<div class="rl">' + esc(l.r) + '</div>' : '') + '</div></div></td>'
+          + '<td><span class="co' + (/^Not (given|recorded)/.test(l.c) ? ' na' : '') + '">' + esc(l.c) + '</span></td>'
+          + '<td class="need">' + esc(l.need) + '</td>'
+          + '<td><span class="date' + (l.d ? (l.ap ? ' ap' : '') : ' none') + '">' + (l.d ? fmt(l.d) : 'Not recorded') + '</span></td>'
+          + '<td><span class="src">' + dot(l.s) + esc(srcShort(l.s)) + '</span></td>'
+          + '<td><span class="tier ' + l.t + '">' + TIER[l.t] + '</span></td>'
+          + '<td>' + fiHtml(l) + '</td><td>' + hsHtml(l) + '</td></tr>';
+        if (open) html += detail(l);
+      });
+    });
+    if (!list.length) html = '<tr><td colspan="8"><div class="empty-state">No leads match these filters. Clear the search or pick All stages.</div></td></tr>';
+    $('rows').innerHTML = html;
+    Array.prototype.forEach.call(document.querySelectorAll('.tog'), function (b) {
+      b.onclick = function () { var i = b.getAttribute('data-i'); state.open[i] = !state.open[i]; renderRows(); var nb = document.querySelector('.tog[data-i="' + i + '"]'); if (nb) nb.focus(); };
+    });
+  }
+
+  function renderAll() { renderChips(); renderChart(); renderMix(); renderRows(); }
+  $('q').addEventListener('input', function (e) { state.text = e.target.value.trim().toLowerCase(); renderRows(); });
+
+  // theme toggle (per-viewer convenience)
+  var root = document.documentElement, btn = $('themeBtn');
+  function isDark() { var t = root.getAttribute('data-theme'); return t ? t === 'dark' : !(window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches); }
+  function syncBtn() { btn.textContent = isDark() ? 'Light mode' : 'Dark mode'; }
+  try { var saved = localStorage.getItem('sapho-leads-theme'); if (saved) root.setAttribute('data-theme', saved); } catch (e) {}
+  btn.onclick = function () { var n = isDark() ? 'light' : 'dark'; root.setAttribute('data-theme', n); try { localStorage.setItem('sapho-leads-theme', n); } catch (e) {} syncBtn(); };
+  syncBtn();
+
+  renderStats(); buildSelects(); renderAll();
+})();
+</script>
+</body>
+</html>
